@@ -12,10 +12,10 @@ import { IbanService } from './shared/iban.service';
       <form [formGroup]="ibanForm" (ngSubmit)="onSubmit()" novalidate>
         <md-input-container class="xapi-iban-input">
           <input mdInput placeholder="IBAN" formControlName="iban">
+          <md-hint>Bank: LLOYDS BANK PLC</md-hint>
         </md-input-container>
         <button class="xapi-iban-submit" md-raised-button type="submit" [disabled]="ibanForm.pristine" color="primary">Continue</button>
       </form>
-      <p>{{bank}}</p>
     </div>
   `
 })

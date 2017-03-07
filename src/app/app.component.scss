@@ -1,3 +1,5 @@
+@import 'src/xapi-theme.scss';
+
 .xapi-iban-submit{
     margin-left: 20px;
 }
@@ -6,4 +8,8 @@
   input{
     width: 400px;
   }
+}
+
+md-hint{
+  color: $green700;
 }
