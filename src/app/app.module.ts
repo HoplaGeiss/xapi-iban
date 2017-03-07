@@ -19,6 +19,9 @@ import { IbanService } from './shared/iban.service';
     AppComponent
   ],
   providers: [IbanService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+    AppComponent
+  ]
 })
-export class AppModule { }
+export class XapiIbanModule { }

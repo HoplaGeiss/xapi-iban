@@ -15,7 +15,7 @@ import { IbanService } from './shared/iban.service';
         </md-input-container>
         <button class="xapi-iban-submit" md-raised-button type="submit" [disabled]="ibanForm.pristine" color="primary">Continue</button>
       </form>
-      <p>{{bank | async}}
+      <p>{{bank | async}}</p>
     </div>
   `
 })
