@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { async, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import { HttpModule } from '@angular/http';
 import { By } from '@angular/platform-browser';
 import {} from 'jasmine';
@@ -12,9 +14,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 fdescribe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
-  let comp;
+  // let comp;
   let page;
   let ibanService;
+  let ibanServiceSpy: jasmine.Spy;
 
   // TODO import AppModule
   beforeEach( async(() => {
@@ -31,6 +34,8 @@ fdescribe('AppComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     });
+    // fixture = TestBed.createComponent(AppComponent);
+    // ibanService = fixture.debugElement.injector.get(IbanService);
     createComponent();
   }));
 
@@ -38,7 +43,8 @@ fdescribe('AppComponent', () => {
   function createComponent() {
     fixture = TestBed.createComponent(AppComponent);
     ibanService = fixture.debugElement.injector.get(IbanService);
-    comp = fixture.componentInstance;
+
+    // comp = fixture.componentInstance;
     page = new Page();
 
     // 1st change detection triggers ngOnInit which gets a hero
@@ -52,7 +58,8 @@ fdescribe('AppComponent', () => {
 
   ////
 
-  it('should show a bank after search', fakeAsync(() => {
+  it('A successful search should show a bank after search', fakeAsync(() => {
+    ibanServiceSpy = spyOn(ibanService, 'search').and.returnValue('Milton Keynes');
     fixture.detectChanges(); // Initial state
 
     // Change the input
@@ -67,19 +74,35 @@ fdescribe('AppComponent', () => {
     tick();
 
     // Expect the service has been called
-    expect(page.ibanServiceSpy).toHaveBeenCalledWith('GB23');
+    expect(ibanServiceSpy).toHaveBeenCalledWith('GB23');
+  }));
+
+
+
+  it('An unsuccessful search should throw an error', fakeAsync(() => {
+    ibanServiceSpy = spyOn(ibanService, 'search').and.throwError('not found');
+    fixture.detectChanges(); // Initial state
+
+    // Change the input
+    page.ibanInput.value = '0001';
+    page.ibanInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    // Click the submit button
+    page.submitButton.click();
+    tick();
+
+    // Expect the service has been called
+    expect(page.ibanServiceSpy).toHaveBeenCalledWith('0001');
   }));
 
 
   class Page {
-    ibanServiceSpy: jasmine.Spy;
     ibanInput: DebugElement;
     submitButton: DebugElement;
     bank = 'Milton Keynes';
 
-    constructor() {
-      this.ibanServiceSpy = spyOn(ibanService, 'search');
-    }
+    constructor() {}
 
     /** Add page elements after hero arrives */
     addPageElements() {

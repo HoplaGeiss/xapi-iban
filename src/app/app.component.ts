@@ -15,13 +15,13 @@ import { IbanService } from './shared/iban.service';
         </md-input-container>
         <button class="xapi-iban-submit" md-raised-button type="submit" [disabled]="ibanForm.pristine" color="primary">Continue</button>
       </form>
-      <p>{{bank | async}}</p>
+      <p>{{bank}}</p>
     </div>
   `
 })
 export class AppComponent {
   ibanForm: FormGroup;
-  bank: Observable<String>;
+  bank: String;
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +37,8 @@ export class AppComponent {
   }
 
   onSubmit() {
-    this.ibanService.search(this.ibanForm.get('iban').value);
-  }
+    this.ibanService.search(this.ibanForm.get('iban').value)
+                    .then(bank => this.bank = bank,
+                          error => this.bank = 'We couldn\'t identify this IBAN');
+    }
 }
