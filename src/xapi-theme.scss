@@ -1,7 +1,7 @@
 @import '~@angular/material/core/theming/all-theme';
 @include mat-core();
 
-$xapi-primary: mat-palette($mat-red, A200, A100, A900);
+$xapi-primary: mat-palette($mat-red);
 $xapi-accent: mat-palette($mat-pink, A200, A100, A400);
 $xapi-warn: mat-palette($mat-indigo, A200, A100, A400);
 

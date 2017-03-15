@@ -2,7 +2,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
-import { IbanService } from './shared/iban.service';
+import { IbanService } from './components/iban/iban.service';
+import { BankService } from './components/bank/bank.service';
+
+import { Bank } from './components/bank/bank';
+import { IbanValidation } from './components/iban-validation/iban-validation';
 
 @Component({
   selector: 'xapi-iban',
@@ -12,20 +16,31 @@ import { IbanService } from './shared/iban.service';
       <form [formGroup]="ibanForm" (ngSubmit)="onSubmit()" novalidate>
         <md-input-container class="xapi-iban-input">
           <input mdInput placeholder="IBAN" formControlName="iban">
-          <md-hint>Bank: LLOYDS BANK PLC</md-hint>
         </md-input-container>
-        <button class="xapi-iban-submit" md-raised-button type="submit" [disabled]="ibanForm.pristine" color="primary">Continue</button>
+        <button class="xapi-iban-submit" md-raised-button type="submit" [disabled]="ibanForm.pristine" color="primary">Search</button>
+        <div *ngIf="bank" class="xapi-iban-search-result">
+          <p>Bank: {{ bank.bank }}</p>
+          <p>Address: {{ bank.fullAddress }}</p>
+        </div>
+
+        <div *ngIf="validations" class="xapi-iban-search-result error">
+          <p *ngFor="let validation of validations">
+            {{validation | showErrors}}
+          </p>
+        </div>
       </form>
     </div>
   `
 })
 export class AppComponent {
   ibanForm: FormGroup;
-  bank: String;
+  bank: Bank;
+  validations: IbanValidation[];
 
   constructor(
     private fb: FormBuilder,
-    private ibanService: IbanService
+    private ibanService: IbanService,
+    private bankService: BankService
   ) {
     this.createForm();
   }
@@ -38,7 +53,10 @@ export class AppComponent {
 
   onSubmit() {
     this.ibanService.search(this.ibanForm.get('iban').value)
-                    .then(bank => this.bank = bank,
-                          error => this.bank = 'We couldn\'t identify this IBAN');
+                    .then(iban => {
+                      this.bank = iban.bank;
+                      this.bankService.getFullAddress(this.bank);
+                      this.validations = iban.validations;
+                    });
     }
 }

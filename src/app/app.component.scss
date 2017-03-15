@@ -10,6 +10,14 @@
   }
 }
 
-md-hint{
-  color: $green700;
+.xapi-iban-search-result{
+  color: green;
+
+  &.error{
+    color: red;
+  }
+
+  p{
+    margin: 5px 0;
+  }
 }
