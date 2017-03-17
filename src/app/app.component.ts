@@ -14,10 +14,9 @@ import { IbanValidation } from './components/iban-validation/iban-validation';
   template: `
     <div class="xapi-iban">
       <form [formGroup]="ibanForm" (ngSubmit)="onSubmit()" novalidate>
-        <md-input-container class="xapi-iban-input">
-          <input mdInput placeholder="IBAN" formControlName="iban">
-        </md-input-container>
-        <button class="xapi-iban-submit" md-raised-button type="submit" [disabled]="ibanForm.pristine" color="primary">Search</button>
+        <div class="xapi-iban-label">IBAN</div>
+        <input class="xapi-iban-input" placeholder="GB04BARC20474473160944" formControlName="iban">
+        <button class="xapi-iban-submit" type="submit" [disabled]="ibanForm.pristine">Search</button>
         <div *ngIf="bank" class="xapi-iban-search-result">
           <p>Bank: {{ bank.bank }}</p>
           <p>Address: {{ bank.fullAddress }}</p>
