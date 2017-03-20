@@ -13,11 +13,11 @@ export class IbanService {
   constructor(private http: Http) {}
 
   search(iban: String): Promise<any> {
-    const url =  'https://discovery-server-xapi.cfapps.io/iban/';
-    // const url =  'api/banks';
+    // const url =  'https://discovery-server-xapi.cfapps.io/iban/';
+    const url =  'api/banks';
     return this.http
-      .get(`${url}${iban}`)
-      // .get(`${url}/1`)
+      // .get(`${url}${iban}`)
+      .get(`${url}/1`)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
